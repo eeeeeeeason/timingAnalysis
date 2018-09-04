@@ -49,5 +49,24 @@ function TimLineTable (dnsTime, tcpTime, requestTime, renderTime, whiteTime, onl
 }
 
 
-var resourcesObj = performance.getEntries();
-console.log(resourcesObj)
+var resourcesObjList = performance.getEntries();
+var timeList = []
+
+// 获取每一项资源请求时间，并进行排列
+resourcesObjList.forEach((item, index) => {
+  item.myDuringTime = item.responseEnd-item.requestStart
+  timeList.push(item.responseEnd-item.requestStart)
+})
+function compare(val1,val2){
+  return val1-val2;
+};
+var resourceList = []
+timeList.sort(compare)
+timeList.forEach((time) => {
+  resourcesObjList.forEach((resourceTimeObj) => {
+    if (resourceTimeObj.myDuringTime === time) {
+      resourceList.push(resourceTimeObj.name)
+    }
+  })
+})
+console.log(resourcesObjList)
